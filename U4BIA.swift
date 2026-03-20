@@ -199,7 +199,10 @@ class CalendarEngine {
     private func cal(_ id: Calendar.Identifier) -> Calendar { var c = Calendar(identifier: id); c.timeZone = .current; return c }
     private func gc(_ d: Date) -> DateComponents { cal(.gregorian).dateComponents([.era,.year,.month,.day,.hour,.minute,.second,.weekday], from: d) }
     private func ts(_ h: Int, _ m: Int, _ s: Int) -> String { String(format: "%02d:%02d:%02d", h, m, s) }
-    private func jdn(_ d: Date) -> Double { d.timeIntervalSince1970 / 86400.0 + 2440587.5 }
+    private func jdn(_ d: Date) -> Double {
+        let tz = Double(TimeZone.current.secondsFromGMT(for: d))
+        return (d.timeIntervalSince1970 + tz) / 86400.0 + 2440587.5
+    }
     private func dayFrac(_ d: Date) -> Double { let c = gc(d); return (Double(c.hour!)*3600+Double(c.minute!)*60+Double(c.second!))/86400.0 }
 
     private let enM = ["","January","February","March","April","May","June","July","August","September","October","November","December"]
